@@ -30,3 +30,4 @@ cd server && npm install && node index.js
 # Frontend (new terminal)
 cd client && npm install && npm run dev
 ```
+"# imposter-game" 
