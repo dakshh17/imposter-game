@@ -1,0 +1,229 @@
+# The Imposter — Complete Setup & Deployment Guide
+# Written for complete beginners
+
+============================================================
+STEP 1: INSTALL REQUIRED TOOLS (one-time setup)
+============================================================
+
+1. Install Node.js (this runs your backend + frontend)
+   → Go to: https://nodejs.org
+   → Download the "LTS" version (green button)
+   → Install it like any normal program
+   → To verify: open Terminal (Mac) or Command Prompt (Windows)
+     and type:  node --version
+     You should see something like: v20.x.x
+
+2. Install Git (to upload code online)
+   → Go to: https://git-scm.com/downloads
+   → Download and install for your OS
+   → To verify: type  git --version  in terminal
+
+3. Create accounts (all free):
+   → GitHub:  https://github.com  (to store your code)
+   → Railway: https://railway.app  (to host your backend)
+   → Vercel:  https://vercel.com   (to host your frontend)
+   
+   Sign up to Railway and Vercel using your GitHub account
+   (makes linking code much easier)
+
+============================================================
+STEP 2: SET UP THE PROJECT LOCALLY
+============================================================
+
+You should have this folder structure from the download:
+  imposter-game/
+    server/
+      index.js
+      gameLogic.js
+      prompts.js
+      package.json
+      .env.example
+    client/
+      src/
+        ...all React files
+      package.json
+      vite.config.js
+      index.html
+      .env.example
+
+--- Install Backend Dependencies ---
+
+Open your terminal. Navigate to the server folder:
+  cd imposter-game/server
+
+Install packages:
+  npm install
+
+Create your .env file (copy from example):
+  Mac/Linux:   cp .env.example .env
+  Windows:     copy .env.example .env
+
+--- Install Frontend Dependencies ---
+
+Open a NEW terminal tab/window. Navigate to the client folder:
+  cd imposter-game/client
+
+Install packages:
+  npm install
+
+Create your .env file:
+  Mac/Linux:   cp .env.example .env
+  Windows:     copy .env.example .env
+
+============================================================
+STEP 3: RUN LOCALLY (TEST BEFORE DEPLOYING)
+============================================================
+
+Terminal 1 (backend):
+  cd imposter-game/server
+  node index.js
+  → You should see: 🎮 Imposter Game Server running on port 3001
+
+Terminal 2 (frontend):
+  cd imposter-game/client
+  npm run dev
+  → You should see: Local: http://localhost:5173
+
+Open http://localhost:5173 in your browser.
+Open another browser tab or use your phone on the same WiFi.
+Test creating and joining a lobby!
+
+============================================================
+STEP 4: DEPLOY BACKEND TO RAILWAY (free hosting)
+============================================================
+
+1. Push your code to GitHub:
+   a. Go to github.com → click "New repository"
+   b. Name it "imposter-game", make it Public
+   c. In terminal, inside the imposter-game/ folder:
+   
+      git init
+      git add .
+      git commit -m "first commit"
+      git branch -M main
+      git remote add origin https://github.com/YOUR_USERNAME/imposter-game.git
+      git push -u origin main
+
+2. Deploy backend on Railway:
+   a. Go to railway.app → Login with GitHub
+   b. Click "New Project" → "Deploy from GitHub repo"
+   c. Select "imposter-game"
+   d. Railway will auto-detect Node.js
+   e. Click on the service → go to "Settings"
+   f. Under "Root Directory" → type:  server
+   g. Under "Start Command" → type:   node index.js
+   h. Go to "Variables" tab → add:
+      PORT = 3001
+      (leave CLIENT_URL for now, update after deploying frontend)
+   i. Go to "Settings" → "Networking" → click "Generate Domain"
+   j. Copy the domain — looks like: imposter-game.railway.app
+      THIS IS YOUR BACKEND URL. Save it!
+
+============================================================
+STEP 5: DEPLOY FRONTEND TO VERCEL
+============================================================
+
+1. Go to vercel.com → Login with GitHub
+2. Click "New Project" → Import "imposter-game"
+3. Under "Root Directory" → type:  client
+4. Under "Framework Preset" → select: Vite
+5. Under "Environment Variables" → add:
+   Key:   VITE_SERVER_URL
+   Value: https://YOUR_RAILWAY_DOMAIN  (e.g. https://imposter-game.railway.app)
+6. Click "Deploy"
+7. Wait ~2 minutes. Vercel gives you a URL like:
+   imposter-game.vercel.app
+   THIS IS YOUR GAME URL. Share this with anyone in the world!
+
+============================================================
+STEP 6: CONNECT BACKEND TO FRONTEND (final step)
+============================================================
+
+Go back to Railway:
+1. Open your service → "Variables"
+2. Add variable:
+   Key:   CLIENT_URL
+   Value: https://imposter-game.vercel.app  (your Vercel URL)
+3. Railway will auto-redeploy. Done!
+
+============================================================
+STEP 7: TEST THE LIVE GAME
+============================================================
+
+1. Open your Vercel URL on your phone
+2. Open the same URL on a friend's phone
+3. One person creates a lobby → shares the 6-letter code
+4. Other people enter the code → host clicks Start
+5. Everyone gets their role privately
+6. Submit words, debate, vote!
+
+============================================================
+TROUBLESHOOTING
+============================================================
+
+Problem: "Lobby not found" when joining
+Solution: Make sure VITE_SERVER_URL points to your Railway URL
+          with https:// prefix and no trailing slash
+
+Problem: Game works locally but not live
+Solution: Go to Railway → check "Logs" tab for errors
+          Most common: forgot to set CLIENT_URL variable
+
+Problem: Socket.IO connection fails
+Solution: Railway sometimes sleeps on free tier
+          First connection may take 10-20 seconds
+
+Problem: npm install fails
+Solution: Make sure Node.js is installed (node --version works)
+          Try: npm install --legacy-peer-deps
+
+============================================================
+HOW TO UPDATE THE GAME
+============================================================
+
+Make changes to your code locally, then:
+  git add .
+  git commit -m "describe what you changed"
+  git push
+
+Both Railway and Vercel auto-detect the push and redeploy!
+
+============================================================
+FILE STRUCTURE EXPLAINED
+============================================================
+
+server/
+  index.js         → Main server. All socket events live here.
+  gameLogic.js     → Role assignment math + win conditions
+  prompts.js       → 60 prompt pairs (add more here!)
+
+client/src/
+  App.jsx          → Screen switcher (landing→lobby→game→result)
+  hooks/
+    useSocket.js   → Connects to server, shared across components
+  pages/
+    Landing.jsx    → Home screen, create/join lobby
+    Lobby.jsx      → Waiting room with code display
+    RoleReveal.jsx → Private role screen per player
+    GameBoard.jsx  → Submission + debate + voting
+    VoteResult.jsx → Result screen with role reveal
+
+============================================================
+ADDING MORE PROMPTS
+============================================================
+
+Open server/prompts.js
+Add more objects to the array:
+  { id: 61, category: "Your Category", collective: "Question for everyone", imposter: "Slightly different question" },
+
+Then commit and push → auto-deploys!
+
+============================================================
+COSTS
+============================================================
+
+Railway: Free tier gives $5 credit/month — enough for small games
+Vercel: Completely free for this use case
+Total expected cost: $0 for casual use
+
+If you get popular and need more resources, Railway paid starts at $5/month.
