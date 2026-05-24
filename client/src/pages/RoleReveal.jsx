@@ -19,8 +19,8 @@ const ROLE_CONFIG = {
     border: 'border-coral/30',
     textColor: 'text-coral',
     icon: '🕵️',
-tagline: "Blend in. Don't get caught.",
-    instruction: 'You have a different prompt. Pick words that seem to fit the group without revealing yourself.'
+    tagline: "Blend in. Don't get caught.",
+    instruction: "You have a different prompt. Pick words that seem to fit the group without revealing yourself."
   },
   joker: {
     label: 'The Joker',
@@ -29,7 +29,7 @@ tagline: "Blend in. Don't get caught.",
     border: 'border-amber/30',
     textColor: 'text-amber',
     icon: '🃏',
-    tagline: "Get yourself eliminated. That's your win.",
+    tagline: 'Get yourself eliminated. That's your win.',
     instruction: 'You have no prompt. Say something vague enough to seem suspicious. You win if you get voted out.'
   }
 };
