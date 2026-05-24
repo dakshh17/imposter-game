@@ -119,6 +119,8 @@ STEP 4: DEPLOY BACKEND TO RAILWAY (free hosting)
    j. Copy the domain — looks like: imposter-game.railway.app
       THIS IS YOUR BACKEND URL. Save it!
 
+imposter-game-production-664e.up.railway.app
+
 ============================================================
 STEP 5: DEPLOY FRONTEND TO VERCEL
 ============================================================
@@ -127,6 +129,13 @@ STEP 5: DEPLOY FRONTEND TO VERCEL
 2. Click "New Project" → Import "imposter-game"
 3. Under "Root Directory" → type:  client
 4. Under "Framework Preset" → select: Vite
+
+
+
+
+
+
+
 5. Under "Environment Variables" → add:
    Key:   VITE_SERVER_URL
    Value: https://YOUR_RAILWAY_DOMAIN  (e.g. https://imposter-game.railway.app)
